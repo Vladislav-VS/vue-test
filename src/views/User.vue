@@ -1,5 +1,5 @@
 <template>
-  <div class="contact" v-on:click="showUserEmail">
+  <div v-bind:class="{contact:true, contactClick: showEmail}"   v-on:click="showUserEmail">
     <div>
       {{ user.first_name }} {{ user.last_name }}
     </div>
@@ -35,9 +35,16 @@ export default {
 <style scoped>
   .contact{
     background-color: antiquewhite;
+    margin: auto;
     margin-bottom: 5%;
     border: 5px double #42b983 ;
     padding: 3%;
     border-radius: 40px;
+    text-align: center;
+    width: 60%;
+  }
+
+  .contactClick{
+    background-color: burlywood;
   }
 </style>
