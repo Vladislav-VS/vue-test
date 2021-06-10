@@ -1,69 +1,66 @@
 <template>
-  <ol>
-    <User :user="user" v-for="user in users" :key="user.id"/>
-  </ol>
+  <div>
+    <div>
+      <ol>
+        <User :user="user" v-for="user in users" :key="user.id"/>
+      </ol>
+    </div>
+    <div>
+
+    <ButtonPageSelector v-on:updateUsers="foo" :page="page" :users="users" v-for="page in pages" :key="page"/>
+    </div>
+  </div>
 </template>
 
 <script>
 import User from './User.vue'
+import axios from 'axios'
+import ButtonPageSelector from './ButtonPageSelector.vue'
 
 export default {
+  /*ыуегз() {
+    let foo1 = ref(j);
+    let foo2 = reactive({val: 33});
+    let method = (userArr) => {
+      this.users = userArr;
+    }
+
+
+    return {
+      foo1,
+      foo2,
+      method
+    }
+  },*/
   components: {
-    User
+    User,
+    ButtonPageSelector
   },
   data() {
     return {
-      users: [{
-        id: 7,
-        email: "michael.lawson@reqres.in",
-        first_name: "Michael",
-        last_name: "Lawson",
-        avatar: "https://reqres.in/img/faces/7-image.jpg",
-        seen: false
-      }, {
-        id: 8,
-        email: "lindsay.ferguson@reqres.in",
-        first_name: "Lindsay",
-        last_name: "Ferguson",
-        avatar: "https://reqres.in/img/faces/8-image.jpg",
-        seen: false
-      }, {
-        id: 9,
-        email: "tobias.funke@reqres.in",
-        first_name: "Tobias",
-        last_name: "Funke",
-        avatar: "https://reqres.in/img/faces/9-image.jpg",
-        seen: false
-      }, {
-        id: 10,
-        email: "byron.fields@reqres.in",
-        first_name: "Byron",
-        last_name: "Fields",
-        avatar: "https://reqres.in/img/faces/10-image.jpg",
-        seen: false
-      }, {
-        id: 11,
-        email: "george.edwards@reqres.in",
-        first_name: "George",
-        last_name: "Edwards",
-        avatar: "https://reqres.in/img/faces/11-image.jpg",
-        seen: false
-      }, {
-        id: 12,
-        email: "rachel.howell@reqres.in",
-        first_name: "Rachel",
-        last_name: "Howell",
-        avatar: "https://reqres.in/img/faces/12-image.jpg",
-        seen: false
-      }]
+      users: [],
+      page: 1,
+      pages: []
     }
   },
+  mounted() {
+    axios
+        .get('https://reqres.in/api/users?page=1')
+        .then(response => {
+          this.users = response.data.data;
+          this.page = response.data.page;
+          this.pages = response.data.total_pages;
+        })
+  },
+  methods: {
+    foo (userArr) {
+      this.users = userArr;
+    }
+  }
+
 }
 
 </script>
 
-<style scoped>
-.foo {
-  background-color: #42b983;
-}
+<style>
 </style>
