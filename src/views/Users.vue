@@ -6,7 +6,6 @@
       </ol>
     </div>
     <div>
-
     <ButtonPageSelector v-on:updateUsers="foo" :page="page" :users="users" v-for="page in pages" :key="page"/>
     </div>
   </div>
@@ -16,49 +15,43 @@
 import User from './User.vue'
 import axios from 'axios'
 import ButtonPageSelector from './ButtonPageSelector.vue'
-
-export default {
-  /*ыуегз() {
-    let foo1 = ref(j);
-    let foo2 = reactive({val: 33});
-    let method = (userArr) => {
-      this.users = userArr;
-    }
+import {defineComponent, onMounted, reactive, ref} from "@vue/composition-api";
 
 
-    return {
-      foo1,
-      foo2,
-      method
-    }
-  },*/
+export default defineComponent({
   components: {
     User,
     ButtonPageSelector
   },
-  data() {
-    return {
-      users: [],
-      page: 1,
-      pages: []
+   setup() {
+    let page = ref(1);
+    let users = reactive([]);
+    let pages = reactive([1,2]);
+    let foo = (userArr) => {
+      users = userArr;
     }
-  },
-  mounted() {
-    axios
-        .get('https://reqres.in/api/users?page=1')
-        .then(response => {
-          this.users = response.data.data;
-          this.page = response.data.page;
-          this.pages = response.data.total_pages;
-        })
-  },
-  methods: {
-    foo (userArr) {
-      this.users = userArr;
-    }
-  }
 
-}
+     onMounted(() => {
+       axios
+           .get('https://reqres.in/api/users?page=1')
+           .then(response => {
+             users = response.data.data;
+             page = response.data.page;
+             pages = response.data.total_pages;
+           })
+     });
+
+    return {
+      page,
+      pages,
+      users,
+      foo
+    }
+  },
+
+
+
+})
 
 </script>
 

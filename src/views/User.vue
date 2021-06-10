@@ -11,13 +11,27 @@
 </template>
 
 <script>
+import {reactive, ref} from "@vue/composition-api";
+
 export default {
-  name: "User",
-  data() {
-    return {
-      showEmail: false
-    }
+  props: {
+    user: Object
   },
+  setup(props){
+    let user = reactive(props.user);
+    let showEmail = ref (false);
+    let showUserEmail = () => {
+      showEmail = !showEmail;
+    }
+
+    return {
+      showEmail,
+      showUserEmail,
+      user
+    }
+  }
+
+  /*
   props: {
     user: {
       type: Object,
@@ -28,7 +42,7 @@ export default {
     showUserEmail() {
       this.showEmail = !this.showEmail;
     }
-  }
+  }*/
 }
 </script>
 
