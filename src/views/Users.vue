@@ -6,7 +6,13 @@
       </ol>
     </div>
     <div>
-    <ButtonPageSelector v-on:updateUsers="foo" :page="page" :users="users" v-for="page in pages" :key="page"/>
+      <ButtonPageSelector v-on:updateUsers="foo" getInformationPage="getInformationPage" :per_page="per_page"
+                          :page="page" :users="users" v-for="page in pages" :key="page"/>
+    </div>
+    <div>
+      Количество пользователей на странице
+      <input v-model="per_page" :placeholder="per_page">
+      <button @click="changePerPage(page, per_page)">Изменить</button>
     </div>
   </div>
 </template>
@@ -15,7 +21,7 @@
 import User from './User.vue'
 import axios from 'axios'
 import ButtonPageSelector from './ButtonPageSelector.vue'
-import {defineComponent, onMounted, reactive, ref} from "@vue/composition-api";
+import {defineComponent, onMounted, ref} from "@vue/composition-api";
 
 
 export default defineComponent({
@@ -23,32 +29,41 @@ export default defineComponent({
     User,
     ButtonPageSelector
   },
-   setup() {
+  setup() {
     let page = ref(1);
-    let users = reactive([]);
-    let pages = reactive([1,2]);
-    let foo = (userArr) => {
-      users = userArr;
+    let users = ref([]);
+    let pages = ref([1, 2]);
+    let per_page = ref(6);
+    let foo = (p) => {
+      getInformationPage(p,per_page.value);
     }
-
-     onMounted(() => {
-       axios
-           .get('https://reqres.in/api/users?page=1')
-           .then(response => {
-             users = response.data.data;
-             page = response.data.page;
-             pages = response.data.total_pages;
-           })
-     });
+    let getInformationPage = (p) => {
+      //console.log(per_page.value)
+      axios.get('https://reqres.in/api/users?page=' + p + '&per_page=' + per_page.value)
+          .then(response => {
+            users.value = response.data.data;
+            per_page.value = response.data.per_page;
+            page.value = response.data.page;
+            pages.value = response.data.total_pages;
+          })
+    }
+    let changePerPage = (p, per_page) => {
+      getInformationPage(p,per_page);
+    }
+    onMounted(() => {
+      getInformationPage(page.value);
+    });
 
     return {
       page,
       pages,
       users,
-      foo
+      foo,
+      per_page,
+      getInformationPage,
+      changePerPage
     }
   },
-
 
 
 })

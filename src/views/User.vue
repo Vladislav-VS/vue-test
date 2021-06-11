@@ -1,48 +1,35 @@
 <template>
   <div v-bind:class="{contact:true, contactClick: showEmail}"   v-on:click="showUserEmail">
     <div>
-      {{ user.first_name }} {{ user.last_name }}
+      {{ currentUser.first_name }} {{ currentUser.last_name }}
     </div>
     <div v-if="showEmail">
-        {{ user.email }}
+        {{ currentUser.email }}
       </div>
-    <img :src="user.avatar"/>
+    <img :src="currentUser.avatar"/>
   </div>
 </template>
 
 <script>
-import {reactive, ref} from "@vue/composition-api";
+import {computed, ref} from "@vue/composition-api";
 
 export default {
   props: {
     user: Object
   },
   setup(props){
-    let user = reactive(props.user);
-    let showEmail = ref (false);
+    let currentUser = computed(() => props.user);
+    let showEmail = ref(false);
     let showUserEmail = () => {
-      showEmail = !showEmail;
+      showEmail.value = !showEmail.value;
     }
 
     return {
       showEmail,
       showUserEmail,
-      user
+      currentUser
     }
   }
-
-  /*
-  props: {
-    user: {
-      type: Object,
-      required: true
-    }
-  },
-  methods: {
-    showUserEmail() {
-      this.showEmail = !this.showEmail;
-    }
-  }*/
 }
 </script>
 

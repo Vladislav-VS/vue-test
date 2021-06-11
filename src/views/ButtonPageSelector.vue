@@ -1,53 +1,30 @@
 <template>
-  <button @click="goToThisPage">
+  <button @click="goToThisPage(p)">
     {{ p }}
   </button>
 </template>
 
 <script>
-import axios from "axios";
-import {defineComponent, getCurrentInstance} from "@vue/composition-api";
-// import {ref} from "@vue/composition-api";
+import {computed, defineComponent, getCurrentInstance} from "@vue/composition-api";
 
 export default defineComponent({
-  props: {
-    page: Number
-  },
-  setup(props) {
-    const {emit} = getCurrentInstance();
-
-    let p = props.page;// let users = reactive(props.users);
-    let goToThisPage = () => {
-      axios.get('https://reqres.in/api/users?page=' + p).then(response => {
-        console.log(""+response);
-        emit('updateUsers', response.data.data)
-        // this.$emit('updateUsers', response.data.data)
-      })
+      props: {
+        page: Number,
+},
+      setup(props) {
+        const {emit} = getCurrentInstance();
+        let p = computed(() => props.page)
+        //let per_page = computed(() => props.per_page)
+        let goToThisPage = () => {
+          emit('updateUsers', p.value);
+        }
+        return {
+          p,
+          goToThisPage
+        }
+      },
     }
-    return {
-      p,
-      // page,
-      // users,
-      goToThisPage
-    }
-  /*props: {
-    page: {
-      type: Number,
-      required: true
-    },
-    users: {
-      type: Array,
-      required: true
-    },
-  },
-  methods: {
-    goToThisPage() {
-      axios.get('https://reqres.in/api/users?page=' + this.page).then(response => {
-        this.$emit('updateUsers', response.data.data)
-      })
-    }*/
-  }
-})
+)
 </script>
 
 <style scoped>
