@@ -38,7 +38,6 @@ export default defineComponent({
       getInformationPage(p,per_page.value);
     }
     let getInformationPage = (p) => {
-      //console.log(per_page.value)
       axios.get('https://reqres.in/api/users?page=' + p + '&per_page=' + per_page.value)
           .then(response => {
             users.value = response.data.data;
