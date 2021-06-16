@@ -1,50 +1,66 @@
 <template>
-  <div v-bind:class="{contact:true, contactClick: showEmail}"   v-on:click="showUserEmail">
+  <div v-bind:class="{contact:true, contactClick: showEmail}" v-on:click="showUserEmail">
     <div>
-      {{ user.first_name }} {{ user.last_name }}
+      {{ currentUser.first_name }} {{ currentUser.last_name }}
     </div>
     <div v-if="showEmail">
-        {{ user.email }}
-      </div>
-    <img :src="user.avatar"/>
+      {{ currentUser.email }}
+    </div>
+    <img :src="currentUser.avatar"/>
+    <div>
+      <router-link :to="'/' + currentUser.id">Подробнее</router-link>
+    </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import {computed, ComputedRef, Ref, ref} from "@vue/composition-api";
+
+export class Us {
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  avatar?: string;
+}
+
 export default {
-  name: "User",
-  data() {
-    return {
-      showEmail: false
-    }
-  },
   props: {
-    user: {
-      type: Object,
-      required: true
-    }
+    user: Us
   },
-  methods: {
-    showUserEmail() {
-      this.showEmail = !this.showEmail;
+  setup(props:any) {
+    let currentUser: ComputedRef<Us> = computed(() => props.user);
+    let showEmail: Ref<boolean> = ref(false);
+    let showUserEmail = () => {
+      showEmail.value = !showEmail.value;
+    }
+
+    // let fatUserClick = () => {
+    //     ctx.root.$router.push({name: 'FatUser', params: {id: props.id}});
+    // }
+
+    return {
+      showEmail,
+      showUserEmail,
+      currentUser
     }
   }
 }
 </script>
 
 <style scoped>
-  .contact{
-    background-color: antiquewhite;
-    margin: auto;
-    margin-bottom: 5%;
-    border: 5px double #42b983 ;
-    padding: 3%;
-    border-radius: 40px;
-    text-align: center;
-    width: 60%;
-  }
+.contact {
+  background-color: antiquewhite;
+  margin: auto;
+  margin-bottom: 5%;
+  border: 5px double #42b983;
+  padding: 3%;
+  border-radius: 40px;
+  text-align: center;
+  width: 60%;
+}
 
-  .contactClick{
-    background-color: burlywood;
-  }
+.contactClick {
+  background-color: burlywood;
+}
 </style>

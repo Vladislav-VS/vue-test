@@ -1,32 +1,30 @@
 <template>
-  <button @click="goToThisPage">
-    {{ page }}
+  <button @click="goToThisPage(p)">
+    {{ p }}
   </button>
 </template>
 
 <script>
-import axios from "axios";
+import {computed, defineComponent, getCurrentInstance} from "@vue/composition-api";
 
-export default {
-  name: "ButtonPageSelector",
-  props: {
-    page: {
-      type: Number,
-      required: true
-    },
-    users: {
-      type: Array,
-      required: true
-    },
-  },
-  methods: {
-    goToThisPage() {
-      axios.get('https://reqres.in/api/users?page=' + this.page).then(response => {
-        this.$emit('updateUsers', response.data.data)
-      })
+export default defineComponent({
+      props: {
+        page: Number,
+},
+      setup(props) {
+        const {emit} = getCurrentInstance();
+        let p = computed(() => props.page)
+        //let per_page = computed(() => props.per_page)
+        let goToThisPage = () => {
+          emit('updateUsers', p.value);
+        }
+        return {
+          p,
+          goToThisPage
+        }
+      },
     }
-  }
-}
+)
 </script>
 
 <style scoped>
