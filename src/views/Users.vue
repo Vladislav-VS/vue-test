@@ -17,27 +17,26 @@
   </div>
 </template>
 
-<script>
-import User from './User.vue'
+<script lang="ts">
+import User, {Us} from './User.vue'
 import axios from 'axios'
 import ButtonPageSelector from './ButtonPageSelector.vue'
-import {defineComponent, onMounted, ref} from "@vue/composition-api";
+import {onMounted, Ref, ref} from "@vue/composition-api";
 
-
-export default defineComponent({
+export default {
   components: {
     User,
     ButtonPageSelector
   },
   setup() {
     let page = ref(1);
-    let users = ref([]);
-    let pages = ref([1, 2]);
+    let users: Ref<Us[]> = ref([]);
+    let pages: Ref<number[]> = ref([1, 2]);
     let per_page = ref(6);
-    let foo = (p) => {
-      getInformationPage(p,per_page.value);
+    let foo = (p:any) => {
+      getInformationPage(p);
     }
-    let getInformationPage = (p) => {
+    let getInformationPage = (p:any) => {
       axios.get('https://reqres.in/api/users?page=' + p + '&per_page=' + per_page.value)
           .then(response => {
             users.value = response.data.data;
@@ -46,8 +45,8 @@ export default defineComponent({
             pages.value = response.data.total_pages;
           })
     }
-    let changePerPage = (p, per_page) => {
-      getInformationPage(p,per_page);
+    let changePerPage = (p: any) => {
+      getInformationPage(p);
     }
     onMounted(() => {
       getInformationPage(page.value);
@@ -65,7 +64,7 @@ export default defineComponent({
   },
 
 
-})
+}
 
 </script>
 

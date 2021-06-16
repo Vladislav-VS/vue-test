@@ -13,16 +13,24 @@
   </div>
 </template>
 
-<script>
-import {computed, ref} from "@vue/composition-api";
+<script lang="ts">
+import {computed, ComputedRef, Ref, ref} from "@vue/composition-api";
+
+export class Us {
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  avatar?: string;
+}
 
 export default {
   props: {
-    user: Object
+    user: Us
   },
-  setup(props) {
-    let currentUser = computed(() => props.user);
-    let showEmail = ref(false);
+  setup(props:any) {
+    let currentUser: ComputedRef<Us> = computed(() => props.user);
+    let showEmail: Ref<boolean> = ref(false);
     let showUserEmail = () => {
       showEmail.value = !showEmail.value;
     }
